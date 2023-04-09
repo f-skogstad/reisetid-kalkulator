@@ -22,6 +22,45 @@ import {
 const center = { lat: 59.910789, lng: 10.74989 };
 
 export default function Home() {
+  const [distance, setDistance] = useState('');
+  const [duration, setDuration] = useState('');
+  const [travelMode, setTravelMode] = useState('TRANSIT');
+
+  const destiantionRef = useRef();
+  const originRef1 = useRef();
+  const originRef2 = useRef();
+  const originRef3 = useRef();
+
+  async function calculateRoute() {
+    if (
+      originRef1.current.value === '' ||
+      destiantionRef.current.value === ''
+    ) {
+      return;
+    }
+
+    const directionsService = new google.maps.DirectionsService();
+    const results = await directionsService.route({
+      origin: originRef1.current.value,
+      destination: destiantionRef.current.value,
+      travelMode: travelMode,
+    });
+
+    setDirectionsResponse(results);
+    setDistance(results.routes[0].legs[0].distance.text);
+    setDuration(results.routes[0].legs[0].duration.text);
+  }
+
+  function clearRoute() {
+    setDirectionsResponse(null);
+    setDistance('');
+    setDuration('');
+    originRef1.current.value = '';
+    originRef2.current.value = '';
+    originRef3.current.value = '';
+    destiantionRef.current.value = '';
+  }
+
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
@@ -61,14 +100,8 @@ export default function Home() {
           </Box>
         )}
 
-        <MapForm setDirectionsResponse={setDirectionsResponse} />
-      </Flex>
-    </>
-  );
-}
-
-{
-  /* <Box
+        {/* <MapForm setDirectionsResponse={setDirectionsResponse} /> */}
+        <Box
           p={4}
           borderRadius='lg'
           m={4}
@@ -80,7 +113,7 @@ export default function Home() {
           <HStack spacing={2} justifyContent='space-between'>
             <Box flexGrow={1}>
               <div>
-                <Input type='text' placeholder='Origin' ref={originRef} />
+                <Input type='text' placeholder='Origin' ref={originRef1} />
               </div>
             </Box>
             <Box flexGrow={1}>
@@ -94,13 +127,13 @@ export default function Home() {
             </Box>
 
             <ButtonGroup>
-              <Button colorScheme='pink' type='submit' onClick={() => {}}>
+              <Button colorScheme='pink' type='submit' onClick={calculateRoute}>
                 Calculate Route
               </Button>
               <IconButton
                 aria-label='center back'
                 icon={<FaTimes />}
-                onClick={() => {}}
+                onClick={clearRoute}
               />
             </ButtonGroup>
           </HStack>
@@ -117,5 +150,12 @@ export default function Home() {
               }}
             />
           </HStack>
-        </Box> */
+        </Box>
+      </Flex>
+    </>
+  );
+}
+
+{
+  /*  */
 }
