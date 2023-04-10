@@ -1,6 +1,5 @@
 import { useRef, useState } from 'react';
 import { FaLocationArrow, FaTimes } from 'react-icons/fa';
-import MapForm from '../components/MapForm';
 import {
   Box,
   Button,
