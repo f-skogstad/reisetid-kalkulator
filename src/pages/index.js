@@ -58,11 +58,6 @@ export default function Home() {
       calculartedDuration += results.routes[0].legs[0].duration.value;
       setDistance(parseInt(calculatedDistance / 1000));
       setDuration(parseInt(calculartedDuration / 60));
-
-      console.log(
-        `Current duration: ${results.routes[0].legs[0].duration.value}`
-      );
-      console.log(`Total duration: ${calculartedDuration}`);
     });
   }
 
